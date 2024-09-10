@@ -1,0 +1,79 @@
+.Footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.Footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.Footer-links a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+}
+
+.Footer-links a:hover {
+  text-decoration: underline;
+}
+
+.Footer-social {
+  margin: 20px 0;
+}
+
+.Footer-social a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.Footer-newsletter {
+  margin: 20px 0;
+}
+
+.Footer-newsletter h4 {
+  margin-bottom: 10px;
+}
+
+.Footer-newsletter form {
+  display: flex;
+  justify-content: center;
+}
+
+.Footer-newsletter input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.Footer-newsletter button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.Footer-newsletter button:hover {
+  background-color: #0056b3;
+}
+
+.Footer-login {
+  margin-top: 20px;
+}
+
+.Footer-login a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.Footer-login a:hover {
+  text-decoration: underline;
+}
