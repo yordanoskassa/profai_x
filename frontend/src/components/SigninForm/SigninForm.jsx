@@ -29,7 +29,9 @@ function SigninForm() {
     return (
         <div className="signup-form-container">
             <div className="signup-form">
-
+                {/* <button className="signup-form-close" onClick={() => navigate(-1)}>
+                    &times;
+                </button> */}
                 <h2>Sign In to Your ProfAI Account</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

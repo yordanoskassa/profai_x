@@ -11,7 +11,9 @@
   --secondary-color: #f2ff00; /* Blue */
   --accent-color: #ffffff; /* Bright yellow for emphasis */
   --text-color: #ffffff; /* White */
-  --button-color: #00fffb; /* Bright cyan for buttons */
+  --button-color: #2cc2cd
+
+  ; /* Bright cyan for buttons */
   --font-family: 'Arial', sans-serif;
 }
 

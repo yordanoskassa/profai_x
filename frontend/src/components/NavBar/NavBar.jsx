@@ -14,8 +14,11 @@ const Navbar = ({ toggleSignUpForm, toggleSigninForm }) => {
   return (
       <nav className="navbar">
         <div className="logo">
-        <NavLink to="/"><a href="/" ><img className="logo" src="./images/logo.png" alt="" width={150}/></a></NavLink>
+        <a href="/" onClick={() => window.location.reload()}>
+            <img className="logo" src="./images/logo.png" alt="Logo" width={150} />
+        </a>
         </div>
+
 
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
               <li className="nav-item">
