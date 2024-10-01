@@ -44,7 +44,7 @@
 
 .signup-form .form-group input:focus {
   outline: none;
-  border-color: #007bff; /* Primary color for focus state */
+  border-color: #57c6d1; /* Primary color for focus state */
   box-shadow: 0 0 3px rgba(0, 123, 255, 0.5); /* Subtle shadow on focus */
 }
 

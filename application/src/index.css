@@ -1,0 +1,178 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f9fc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  color: #333;
+}
+
+#root {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/*chat gpt assistance */
+/* Sticky Header Styles */
+.header {
+  background-color: #1e2a38;
+  color: #fff;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;    /* Makes the header sticky */
+  top: 0;              /* Sticks the header to the top of the viewport */
+  z-index: 1000;       /* Ensures the header stays above other content */
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/*chat gpt assistance */
+.header-title img {
+  height: 40px;        /* Adjust the height of the logo */
+  margin-right: 10px;  /* Space between logo and text */
+}
+
+.header-link {
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  background-color: #3a3a3c;
+}
+
+.header-link:hover {
+  background-color: #57c6d1;
+}
+
+
+/* Sidebar Styles */
+.sidebar {
+  position: sticky;
+  width: 260px;
+  background-color: #1e2a38;
+  color: white;
+  height: 100%;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  border-right: 1px solid #3a3a3c;
+}
+
+.sidebar-title {
+  padding-left: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #a9b1c1;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-list li {
+  padding: 12px 25px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+  margin: 5px 0;
+  font-weight: 300;
+}
+
+.sidebar-list li:hover {
+  background-color: #2a3749;
+  padding-left: 30px;
+}
+
+.sidebar-list li.active {
+  background-color: #3e4c61;
+  font-weight: 600;
+  padding-left: 30px;
+  border-left: 4px solid #57c6d1;
+}
+
+.dashboard-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  background-color: #eef1f7;
+}
+
+.dashboard-content {
+  margin-left: 260px;
+  padding: 30px;
+  flex: 1;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+/* Login Page Styles */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px);
+  background-color: #f7f9fc;
+}
+
+.login-page input {
+  margin: 10px;
+  padding: 12px;
+  width: 280px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.login-page button {
+  padding: 10px 30px;
+  background-color: #57c6d1;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.login-page button:hover {
+  background-color: #0056b3;
+}
+
+.dashboard-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
