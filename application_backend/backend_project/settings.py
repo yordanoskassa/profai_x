@@ -8,6 +8,9 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
+
+
+ChatGPT for Mongo Compass Assistance: https://chatgpt.com/share/66fca461-6aac-8000-9f31-a137f8004f40
 """
 
 from pathlib import Path
@@ -37,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',         
+    'myapp',          
 ]
 
 MIDDLEWARE = [
@@ -76,7 +81,10 @@ WSGI_APPLICATION = 'backend_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'users',
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017',  # Your MongoDB URI
+        }
     }
 }
 
