@@ -20,6 +20,10 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#HEYGEN Stuff
+HEYGEN_API_KEY = 'YTBjZTA4MTg0NjU0NGQ1ZjliOTY3ZWVkZWFkYzczNzMtMTY5NDIzODY2NA=='
+##HEYGEN_API_KEY = os.getenv('YTBjZTA4MTg0NjU0NGQ1ZjliOTY3ZWVkZWFkYzczNzMtMTY5NDIzODY2NA==')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -57,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 ]
 
@@ -121,6 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
