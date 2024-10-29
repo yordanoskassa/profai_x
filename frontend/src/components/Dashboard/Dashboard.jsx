@@ -1,39 +1,30 @@
-// src/components/Dashboard.jsx
+// src/components/Dashboard/Dashboard.jsx
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Sidebar from './Sidebar'; // Import your Sidebar component
-import Avatars from './Avatars'; // Import the Avatars component
-import Projects from './Projects'; // Import Projects component (if you have one)
-import Templates from './Templates'; // Import Templates component (if you have one)
-import Voices from './Voices'; // Import Voices component (if you have one)
+import { Routes, Route } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Projects from './Projects';
+import Avatars from './Avatars';
+import Templates from './Templates';
+import Voices from './Voices';
+import './Dashboard_styles.css';
 
-const Dashboard = ({ token }) => {
+const Dashboard = () => {
+  // Retrieve the token, here assumed to be from localStorage.
+  const token = localStorage.getItem("authToken");
+
   return (
-    <Router>
-      <div className="dashboard">
-        <Sidebar setActiveTab={(tab) => console.log(tab)} /> {/* You can handle active tabs here */}
-
-        <div className="content">
-          <Switch>
-            <Route path="/dashboard/projects">
-              <Projects token={token} /> {/* Render Projects component */}
-            </Route>
-            <Route path="/dashboard/avatars">
-              <Avatars token={token} /> {/* Render Avatars component */}
-            </Route>
-            <Route path="/dashboard/templates">
-              <Templates token={token} /> {/* Render Templates component */}
-            </Route>
-            <Route path="/dashboard/voices">
-              <Voices token={token} /> {/* Render Voices component */}
-            </Route>
-            <Route path="/">
-              <h2>Welcome to the Dashboard</h2> {/* Default route */}
-            </Route>
-          </Switch>
-        </div>
+    <div className="dashboard-container">
+      <Sidebar />
+      <div className="dashboard-content">
+        <Routes>
+          <Route path="projects" element={<Projects />} />
+          {/* Pass the token to Avatars component */}
+          <Route path="avatars" element={<Avatars token={token} />} />
+          <Route path="templates" element={<Templates />} />
+          <Route path="voices" element={<Voices />} />
+        </Routes>
       </div>
-    </Router>
+    </div>
   );
 };
 

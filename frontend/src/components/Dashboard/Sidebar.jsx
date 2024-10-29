@@ -1,26 +1,32 @@
 // src/components/Sidebar.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import Link and useLocation for active tab tracking
+import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 
 const Sidebar = () => {
-  const location = useLocation(); // Get the current path to track the active tab
-
   return (
     <div className="sidebar">
       <h3 className="sidebar-title">My Dashboard</h3>
       <ul className="sidebar-list">
-        <li className={location.pathname === '/dashboard/projects' ? 'active' : ''}>
-          <Link to="/dashboard/projects">My Projects</Link>
+        <li>
+          <NavLink to="/dashboard/projects" className={({ isActive }) => (isActive ? 'active' : '')}>
+            My Projects
+          </NavLink>
         </li>
-        <li className={location.pathname === '/dashboard/avatars' ? 'active' : ''}>
-          <Link to="/dashboard/avatars">My Avatars</Link>
+        <li>
+          <NavLink to="/dashboard/avatars" className={({ isActive }) => (isActive ? 'active' : '')}>
+            My Avatars
+          </NavLink>
         </li>
-        <li className={location.pathname === '/dashboard/templates' ? 'active' : ''}>
-          <Link to="/dashboard/templates">My Templates</Link>
+        <li>
+          <NavLink to="/dashboard/templates" className={({ isActive }) => (isActive ? 'active' : '')}>
+            My Templates
+          </NavLink>
         </li>
-        <li className={location.pathname === '/dashboard/voices' ? 'active' : ''}>
-          <Link to="/dashboard/voices">My Voices</Link>
+        <li>
+          <NavLink to="/dashboard/voices" className={({ isActive }) => (isActive ? 'active' : '')}>
+            My Voices
+          </NavLink>
         </li>
       </ul>
     </div>

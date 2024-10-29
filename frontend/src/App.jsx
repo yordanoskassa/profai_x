@@ -14,6 +14,9 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 import TestimonialsSection from './components/TestimonialsSection/TestimonialsSection.jsx'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
+
+
+
 import './App.css';
 
 function HomePage() {
@@ -39,11 +42,18 @@ function App() {
         <Routes>
           {/* Home page with multiple sections */}
           <Route path="/" element={<HomePage />} />
-          
+          {/* <Route path="/test-avatars" element={<Avatars token="testToken" />} /> */}
+
+
           {/* Other individual pages */}
           <Route path="/register" element={<SignUpForm />} />
           <Route path="/login" element={<SigninForm />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /> </ProtectedRoute>} />
+          <Route
+              path="/Dashboard/*"
+              element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+              />
+              console.log("Dashboard route hit");
+
          
         </Routes>
         
