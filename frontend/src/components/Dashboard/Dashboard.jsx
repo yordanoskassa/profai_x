@@ -6,6 +6,7 @@ import Projects from './Projects';
 import Avatars from './Avatars';
 import Templates from './Templates';
 import Voices from './Voices';
+import Header from './Header';
 import './Dashboard_styles.css';
 
 const Dashboard = () => {
@@ -14,12 +15,13 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      <Header />
       <Sidebar />
       <div className="dashboard-content">
         <Routes>
           <Route path="projects" element={<Projects />} />
           {/* Pass the token to Avatars component */}
-          <Route path="avatars" element={<Avatars token={token} />} />
+          <Route path="avatars" element={<Avatars/>} />
           <Route path="templates" element={<Templates />} />
           <Route path="voices" element={<Voices />} />
         </Routes>
