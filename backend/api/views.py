@@ -38,7 +38,7 @@ class CreateUserView(generics.CreateAPIView):
 
 
 def get_avatars(request):
-    url = "https://api.heygen.com/v1/avatar.list"
+    url = "https://api.heygen.com/v2/avatars"
     api_key = settings.HEYGEN_API_KEY
     headers = {
         "accept": "application/json",
