@@ -1,45 +1,47 @@
-// Code structure and contents provided by OpenAI:
-// https://chatgpt.com/share/6722cfdd-2810-8000-9f5c-21c2a0b625e7
-import React, { useState, useEffect } from 'react';
-import AvatarList from './Avatars_API';
-import Avatar from './Avatars'; // Assuming Avatar is a separate component for individual avatar display
+import React, { useState } from 'react';
+import AvatarList from './AvatarList'; // Adjusted for one-level up directory
+import LoadingIndicator from '../LoadingIndicator/LoadingIndicator'; // Import LoadingIndicator component
 
-const Avatars = ({ token }) => {
-  const [avatars, setAvatars] = useState([]);
+const Avatars = () => {
+  const [jsonData, setJsonData] = useState("");
   const [error, setError] = useState(null);
-
-  // Log token for verification and fetch avatars only if token is available
-  useEffect(() => {
-    if (!token) {
-      console.error("Token is undefined, cannot fetch avatars.");
-      setError("Token is undefined, cannot fetch avatars.");
-      return;
-    }
-
-    console.log("Fetching avatars with token:", token);
-
-    // Call AvatarList or fetch function here if necessary
-  }, [token]);
-
-  // Prevent rendering if there's no token
-  if (!token) {
-    return <div>Loading... Please provide a valid token.</div>;
-  }
+  const [loading, setLoading] = useState(false); // Loading state
+  const [apiToken, setApiToken] = useState(""); // State for optional API token input
 
   return (
     <div>
-      <h2>Avatars</h2>
-      {/* Pass token, setAvatars, and setError props to AvatarList */}
-      <AvatarList setAvatars={setAvatars} setError={setError} token={token} />
+      <h2>Available Avatars</h2>
+      {/* Optional Token Input */}
+          <div className="input-container">
+      <label >API Token:</label>
+      <input
+        type="text"
+        value={apiToken}
+        onChange={(e) => setApiToken(e.target.value)}
+        placeholder="Enter API Token"
+        className="input-box"
+      />
+    </div>
 
-      {error && <div>Error: {error}</div>}
 
-      {avatars && avatars.length > 0 ? (
-        avatars.map((avatar) => (
-          <Avatar key={avatar.id} data={avatar} />
-        ))
-      ) : (
-        <p>No avatars available.</p>
+      <AvatarList
+        setJsonData={setJsonData}
+        setError={setError}
+        setLoading={setLoading} // Pass down setLoading
+        loading={loading} // Pass down loading state
+      />
+
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      {/* Show LoadingIndicator if loading is true */}
+      {loading ? <LoadingIndicator /> : (
+        <textarea
+          value={jsonData}
+          readOnly
+          rows="20"
+          cols="80"
+          style={{ width: "100%", height: "400px" }}
+        />
       )}
     </div>
   );
