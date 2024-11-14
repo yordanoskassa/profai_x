@@ -9,6 +9,7 @@ const Projects = () => {
   const [contentPrompt, setContentPrompt] = useState(""); // State for content prompt
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Loading state
+  const [responseMessage, setResponseMessage] = useState(null); // For backend response
 
   // Extract avatar names when jsonData updates
   useEffect(() => {
@@ -31,6 +32,39 @@ const Projects = () => {
     }
   }, [jsonData]);
 
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Ensure both fields are filled
+    if (!selectedAvatar || !contentPrompt) {
+      setError("Please select an avatar and enter a content prompt.");
+      return;
+    }
+    
+    setLoading(true); // Set loading state while fetching
+    
+    try {
+      const response = await fetch('http://localhost:8000/api/generate_script/', { // Replace with your actual endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          avatar_name: selectedAvatar,
+          content_prompt: contentPrompt,
+        }),
+      });
+      
+      const data = await response.json();
+      setResponseMessage(data.message || "Request successful!");
+      setLoading(false);
+    } catch (error) {
+      setError("An error occurred while sending the request.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <h2>Please use the options below to select an avatar, and enter a content prompt!</h2>
@@ -43,6 +77,7 @@ const Projects = () => {
       />
 
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {responseMessage && <p style={{ color: 'green' }}>{responseMessage}</p>}
 
       {/* Show LoadingIndicator if loading is true */}
       {loading ? (
@@ -67,36 +102,41 @@ const Projects = () => {
         </div>
       )}
 
-      {/* Dropdown for Avatar Selection */}
-      <div>
-        <label htmlFor="avatarNames">Select Avatar:</label>
-        <select
-          id="avatarNames"
-          value={selectedAvatar}
-          onChange={(e) => setSelectedAvatar(e.target.value)}
-          required
-        >
-          <option value="">Select an avatar</option>
-          {avatarNames.map((name, index) => (
-            <option key={index} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Form for Avatar Selection and Content Prompt */}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="avatarNames">Select Avatar:</label>
+          <select
+            id="avatarNames"
+            value={selectedAvatar}
+            onChange={(e) => setSelectedAvatar(e.target.value)}
+            required
+          >
+            <option value="">Select an avatar</option>
+            {avatarNames.map((name, index) => (
+              <option key={index} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Content Prompt Text Field */}
-      <div style={{ marginTop: '1em' }}>
-        <label htmlFor="contentPrompt">Content Prompt:</label>
-        <input
-          type="text"
-          id="contentPrompt"
-          value={contentPrompt}
-          onChange={(e) => setContentPrompt(e.target.value)}
-          style={{ width: '100%', padding: '0.5em', marginTop: '0.5em' }}
-          placeholder="Enter your content prompt here"
-        />
-      </div>
+        <div style={{ marginTop: '1em' }}>
+          <label htmlFor="contentPrompt">Content Prompt:</label>
+          <input
+            type="text"
+            id="contentPrompt"
+            value={contentPrompt}
+            onChange={(e) => setContentPrompt(e.target.value)}
+            style={{ width: '100%', padding: '0.5em', marginTop: '0.5em' }}
+            placeholder="Enter your content prompt here"
+          />
+        </div>
+
+        <button type="submit" style={{ marginTop: '1em' }}>
+          Submit
+        </button>
+      </form>
     </div>
   );
 };
