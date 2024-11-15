@@ -21,7 +21,7 @@ const Projects = () => {
         // Access the 'avatars' array within the 'data' object
         const names = parsed.data && parsed.data.avatars ? parsed.data.avatars.map(avatar => avatar.avatar_name) : [];
         
-        console.log("Extracted Names:", names); // Log the extracted names for debugging
+        //console.log("Extracted Names:", names); // Log the extracted names for debugging
         setAvatarNames(names);
         setError(null);
       }
@@ -45,23 +45,31 @@ const Projects = () => {
     setLoading(true); // Set loading state while fetching
     
     try {
-      const response = await fetch('http://localhost:8000/api/generate_script/', { // Replace with your actual endpoint
+      // Send a POST request with the selected avatar and content prompt
+      const response = await fetch('http://localhost:8000/api/generate_script/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          avatar_name: selectedAvatar,
-          content_prompt: contentPrompt,
+          selectedAvatar: selectedAvatar,
+          contentPrompt: contentPrompt,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       
       const data = await response.json();
-      setResponseMessage(data.message || "Request successful!");
-      setLoading(false);
+      console.log('Backend Response:', data);
+      setResponseMessage(data.message || "Script generated successfully!");
+
     } catch (error) {
-      setError("An error occurred while sending the request.");
-      setLoading(false);
+      console.error('Error during request:', error); // Handle error here
+      setError("Failed to generate script");
+    } finally {
+      setLoading(false); // Set loading state to false after completion
     }
   };
 
