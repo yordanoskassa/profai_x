@@ -170,7 +170,8 @@ def generate_script(request):
         try:
             data = json.loads(request.body)
             contentPrompt = data.get('contentPrompt', '')
-            OPENAI_API_KEY = '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'
+            OPENAI_API_KEY = 'blank'
+            #'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'
             if not contentPrompt:
                 return JsonResponse({'error': 'Content prompt is required'}, status=400)
 
