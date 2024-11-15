@@ -163,7 +163,9 @@ def generate_script(request):
 '''
 
 
-
+'''
+ERROR OCCURRING IN FUNCTION
+'''
 @csrf_exempt
 def generate_script(request):
     if request.method == 'POST':
