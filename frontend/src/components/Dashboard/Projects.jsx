@@ -92,11 +92,28 @@ const Projects = () => {
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {responseMessage && <p style={{ color: 'green' }}>{responseMessage}</p>}
 
-      {!isNewProjectVisible && (
-        <button onClick={() => setIsNewProjectVisible(true)} style={{ margin: '1em' }}>
-          New Project
-        </button>
-      )}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {/* Video Player, visible only when `isNewProjectVisible` is false */}
+        {!isNewProjectVisible && (
+          <video width="300" controls>
+            <source
+              src="https://files2.heygen.ai/aws_pacific/avatar_tmp/1033b8a8ca6b4afbbab64fe388e0730f/63c8a5090b81476ebabd6fd4bff0c7c5.mp4?Expires=1732379399&Signature=lSxHg6EO8jLluPa5wTlxiLA7XEnFOfmbQ0bVuMfM~F18Vk7-x87rnxB5pxQv5mY1qEp2-TrEWkT3cciR8N1P-WnCmYdhOmY5AmmP-agwXQ~ksLIF3qRgnKGE4AMBkbCT6GGonCzekNBZ1dZS6D584i3UCtC-2rh5sDltD75erBZtorz3d77-VEDM1wFgGSkKdmKToqLWxyncixX4IC3YHKsTObU3VsKBn5z58YQcuDQIz0Ghln-Ofb7nIlKBupvu4Tcv-y38NsXUKI~fJ-rT75bWSqsM-LQjCT2pJrP9-80g~Hy3YbIigHYC3xvs88jfXXqTxknzrcPy7vBmkyxo3g__&Key-Pair-Id=K38HBHX5LX3X2H"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        )}
+
+        {/* New Project Button */}
+        {!isNewProjectVisible && (
+          <button
+            onClick={() => setIsNewProjectVisible(true)}
+            style={{ margin: '1em', marginLeft: '2em' }} // Add space between video and button
+          >
+            New Project
+          </button>
+        )}
+      </div>
 
       {isNewProjectVisible && (
         <div>
