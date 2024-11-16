@@ -10,6 +10,7 @@ const Projects = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Loading state
   const [responseMessage, setResponseMessage] = useState(null); // For backend response
+  const [generatedScript, setGeneratedScript] = useState(null); // State for the generated script
 
   // Extract avatar names when jsonData updates
   useEffect(() => {
@@ -21,7 +22,6 @@ const Projects = () => {
         // Access the 'avatars' array within the 'data' object
         const names = parsed.data && parsed.data.avatars ? parsed.data.avatars.map(avatar => avatar.avatar_name) : [];
         
-        //console.log("Extracted Names:", names); // Log the extracted names for debugging
         setAvatarNames(names);
         setError(null);
       }
@@ -35,7 +35,6 @@ const Projects = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     // Ensure both fields are filled
     if (!selectedAvatar || !contentPrompt) {
       setError("Please select an avatar and enter a content prompt.");
@@ -64,6 +63,7 @@ const Projects = () => {
       const data = await response.json();
       console.log('Backend Response:', data);
       setResponseMessage(data.message || "Script generated successfully!");
+      setGeneratedScript(data.generated_script); // Set the generated script
 
     } catch (error) {
       console.error('Error during request:', error); // Handle error here
@@ -145,6 +145,14 @@ const Projects = () => {
           Submit
         </button>
       </form>
+
+      {/* Display the generated script */}
+      {generatedScript && (
+        <div style={{ marginTop: '2em', padding: '1em', border: '1px solid #ccc' }}>
+          <h3>Generated Script:</h3>
+          <p>{generatedScript}</p>
+        </div>
+      )}
     </div>
   );
 };

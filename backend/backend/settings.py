@@ -21,8 +21,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #HEYGEN Stuff
-HEYGEN_API_KEY = 'YTBjZTA4MTg0NjU0NGQ1ZjliOTY3ZWVkZWFkYzczNzMtMTY5NDIzODY2NA=='
-##HEYGEN_API_KEY = os.getenv('YTBjZTA4MTg0NjU0NGQ1ZjliOTY3ZWVkZWFkYzczNzMtMTY5NDIzODY2NA==')
+HEYGEN_API_KEY = '[intentionally blank, see Google docs]'
+CHATGPT_API_KEY = '[intentionally blank, see Google docs]'
 
 
 # Quick-start development settings - unsuitable for production
