@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import AvatarList from './AvatarList'; // Adjusted for one-level up directory
 import LoadingIndicator from '../LoadingIndicator/LoadingIndicator'; // Import LoadingIndicator component
 
 const Projects = () => {
-  const [jsonData, setJsonData] = useState("");
   const [avatarNames, setAvatarNames] = useState([]); // State for avatar names
   const [selectedAvatar, setSelectedAvatar] = useState(""); // State for selected avatar
   const [contentPrompt, setContentPrompt] = useState(""); // State for content prompt
@@ -11,40 +9,45 @@ const Projects = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [responseMessage, setResponseMessage] = useState(null); // For backend response
   const [generatedScript, setGeneratedScript] = useState(null); // State for the generated script
+  const [isNewProjectVisible, setIsNewProjectVisible] = useState(false); // Toggle for form visibility
 
-  // Extract avatar names when jsonData updates
+  // Fetch avatars on page load
   useEffect(() => {
-    try {
-      if (jsonData) {
-        const parsed = JSON.parse(jsonData);
-        console.log("Parsed JSON:", parsed); // Log the parsed JSON for debugging
-        
-        // Access the 'avatars' array within the 'data' object
-        const names = parsed.data && parsed.data.avatars ? parsed.data.avatars.map(avatar => avatar.avatar_name) : [];
-        
+    const fetchAvatars = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8000/api/get_avatars/');
+        if (!response.ok) {
+          throw new Error('Failed to fetch avatars');
+        }
+        const data = await response.json();
+        console.log('Avatar API Response:', data);
+
+        // Parse avatar names
+        const names = data.data?.avatars?.map((avatar) => avatar.avatar_name) || [];
         setAvatarNames(names);
         setError(null);
+      } catch (err) {
+        console.error('Error fetching avatars:', err);
+        setError('Failed to load avatars');
+      } finally {
+        setLoading(false);
       }
-    } catch (parseError) {
-      console.error("JSON Parse Error:", parseError);
-      setError("Failed to parse JSON data");
-      setAvatarNames([]);
-    }
-  }, [jsonData]);
+    };
+
+    fetchAvatars(); // Trigger the fetch
+  }, []); // Empty dependency array ensures it only runs once on mount
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ensure both fields are filled
     if (!selectedAvatar || !contentPrompt) {
       setError("Please select an avatar and enter a content prompt.");
       return;
     }
-    
-    setLoading(true); // Set loading state while fetching
-    
+
+    setLoading(true);
     try {
-      // Send a POST request with the selected avatar and content prompt
       const response = await fetch('http://localhost:8000/api/generate_script/', {
         method: 'POST',
         headers: {
@@ -57,100 +60,95 @@ const Projects = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to generate script');
       }
-      
-      const data = await response.json();
-      console.log('Backend Response:', data);
-      setResponseMessage(data.message || "Script generated successfully!");
-      setGeneratedScript(data.generated_script); // Set the generated script
 
-    } catch (error) {
-      console.error('Error during request:', error); // Handle error here
+      const data = await response.json();
+      console.log('Script API Response:', data);
+      setResponseMessage(data.message || "Script generated successfully!");
+      setGeneratedScript(data.generated_script);
+    } catch (err) {
+      console.error('Error generating script:', err);
       setError("Failed to generate script");
     } finally {
-      setLoading(false); // Set loading state to false after completion
+      setLoading(false);
     }
+  };
+
+  const handleBack = () => {
+    // Reset state and go back to the initial view
+    setSelectedAvatar("");
+    setContentPrompt("");
+    setResponseMessage(null);
+    setGeneratedScript(null);
+    setError(null);
+    setIsNewProjectVisible(false);
   };
 
   return (
     <div>
-      <h2>Please use the options below to select an avatar, and enter a content prompt!</h2>
-
-      <AvatarList
-        setJsonData={setJsonData}
-        setError={setError}
-        setLoading={setLoading} // Pass down setLoading
-        loading={loading} // Pass down loading state
-      />
+      <h2>Projects</h2>
 
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {responseMessage && <p style={{ color: 'green' }}>{responseMessage}</p>}
 
-      {/* Show LoadingIndicator if loading is true */}
-      {loading ? (
-        <LoadingIndicator />
-      ) : (
-        <div>
-          {avatarNames.length > 0 ? (
-            <ul style={{ maxHeight: "400px", overflow: "auto" }}>
-              {avatarNames.map((name, index) => (
-                <li key={index}>{name}</li>
-              ))}
-            </ul>
-          ) : (
-            <textarea
-              value={avatarNames.join(", ")} // Display only avatar names as a comma-separated list
-              readOnly
-              rows="20"
-              cols="80"
-              style={{ width: "100%", height: "400px" }}
-            />
-          )}
-        </div>
+      {!isNewProjectVisible && (
+        <button onClick={() => setIsNewProjectVisible(true)} style={{ margin: '1em' }}>
+          New Project
+        </button>
       )}
 
-      {/* Form for Avatar Selection and Content Prompt */}
-      <form onSubmit={handleSubmit}>
+      {isNewProjectVisible && (
         <div>
-          <label htmlFor="avatarNames">Select Avatar:</label>
-          <select
-            id="avatarNames"
-            value={selectedAvatar}
-            onChange={(e) => setSelectedAvatar(e.target.value)}
-            required
-          >
-            <option value="">Select an avatar</option>
-            {avatarNames.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {loading && <LoadingIndicator />}
 
-        <div style={{ marginTop: '1em' }}>
-          <label htmlFor="contentPrompt">Content Prompt:</label>
-          <input
-            type="text"
-            id="contentPrompt"
-            value={contentPrompt}
-            onChange={(e) => setContentPrompt(e.target.value)}
-            style={{ width: '100%', padding: '0.5em', marginTop: '0.5em' }}
-            placeholder="Enter your content prompt here"
-          />
-        </div>
+          {!loading && (
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="avatarNames">Select Avatar:</label>
+                <select
+                  id="avatarNames"
+                  value={selectedAvatar}
+                  onChange={(e) => setSelectedAvatar(e.target.value)}
+                  required
+                >
+                  <option value="">Select an avatar</option>
+                  {avatarNames.map((name, index) => (
+                    <option key={index} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        <button type="submit" style={{ marginTop: '1em' }}>
-          Submit
-        </button>
-      </form>
+              <div style={{ marginTop: '1em' }}>
+                <label htmlFor="contentPrompt">Content Prompt:</label>
+                <input
+                  type="text"
+                  id="contentPrompt"
+                  value={contentPrompt}
+                  onChange={(e) => setContentPrompt(e.target.value)}
+                  style={{ width: '100%', padding: '0.5em', marginTop: '0.5em' }}
+                  placeholder="Enter your content prompt here"
+                />
+              </div>
 
-      {/* Display the generated script */}
-      {generatedScript && (
-        <div style={{ marginTop: '2em', padding: '1em', border: '1px solid #ccc' }}>
-          <h3>Generated Script:</h3>
-          <p>{generatedScript}</p>
+              <button type="submit" style={{ marginTop: '1em' }}>
+                Submit
+              </button>
+            </form>
+          )}
+
+          {generatedScript && (
+            <div style={{ marginTop: '2em', padding: '1em', border: '1px solid #ccc' }}>
+              <h3>Generated Script:</h3>
+              <p>{generatedScript}</p>
+            </div>
+          )}
+
+          <button onClick={handleBack} style={{ marginTop: '2em', display: 'block' }}>
+            Back
+          </button>
         </div>
       )}
     </div>

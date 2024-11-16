@@ -9,6 +9,7 @@ urlpatterns = [
     path("notes/delete/<int:pk>/", views.NoteDelete.as_view(), name="delete-note"),
     path('get_avatars/', get_avatars, name='get_avatars'),
     path('generate_script/', generate_script, name='generate_script'),
+    path('get_voices/', get_voices, name='get_voices'),
 ]
 
     #path('save_api/', views.SaveAPI

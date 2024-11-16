@@ -79,6 +79,7 @@ def get_voices(request):
         return JsonResponse(data)  # Return the response from HeyGen to the frontend
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': str(e)}, status=500)
+        
     
 def retrieve_video_status(request):
     pass
