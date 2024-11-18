@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #f7f9fc;
+    background-color: #5c85c2;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -169,11 +169,12 @@ body {
   }
   
   .dashboard-content::-webkit-scrollbar-thumb {
-    background: #ffffff;
+    background: #418fc8;
     border-radius: 4px;
   }
   
   .dashboard-content::-webkit-scrollbar-thumb:hover {
     background: #a0a0a0;
   }
+  
   

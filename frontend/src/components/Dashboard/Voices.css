@@ -1,0 +1,82 @@
+/* Voices container styling */
+.voices-container {
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #335e66, #2b4f55); /* Teal gradient background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: #ffffff; /* White text for contrast */
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  /* Heading styling */
+  .voices-heading {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #f1f1f1; /* Slightly off-white for readability */
+  }
+  
+  /* Loading message styling */
+  .voices-loading {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #e0e0e0; /* Light gray for subtlety */
+  }
+  
+  /* Error message styling */
+  .voices-error {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ff6f61; /* Red for error emphasis */
+    margin-top: 1rem;
+  }
+  
+  /* No voices available message */
+  .no-voices {
+    font-size: 1.2rem;
+    color: #e0e0e0; /* Light gray for subtle emphasis */
+  }
+  
+  /* Voices list styling */
+  .voices-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent overlay */
+    border-radius: 5px;
+    padding: 1rem;
+  }
+  
+  .voice-item {
+    font-size: 1rem;
+    color: #f1f1f1; /* White text */
+    padding: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle divider */
+  }
+  
+  .voice-item:last-child {
+    border-bottom: none;
+  }
+  
+  .voice-item:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Light hover highlight */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .voices-container {
+      padding: 1rem;
+    }
+  
+    .voices-heading {
+      font-size: 1.5rem;
+    }
+  
+    .voice-item {
+      font-size: 0.9rem;
+    }
+  }
+  

@@ -1,0 +1,123 @@
+.projects-container {
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #335e66, #2b4f55); /* Teal gradient background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: #ffffff; /* White text for contrast */
+    font-family: Arial, sans-serif;
+  }
+  
+  .heading {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #f1f1f1; /* Slightly off-white for better readability */
+  }
+  
+  .form-container {
+    margin-top: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #e0e0e0; /* Light gray for labels */
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff; /* Subtle contrast for input fields */
+    color: #2b3a42;
+  }
+  
+  .form-control:focus {
+    border-color: #3e8e7e;
+    outline: none;
+  }
+  
+  .submit-button,
+  .back-button {
+    padding: 0.8rem 1.2rem;
+    background: linear-gradient(to bottom, #4caf50, #3e8e7e); /* Gradient for buttons */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+  
+  .submit-button:hover,
+  .back-button:hover {
+    background: linear-gradient(to bottom, #3e8e7e, #2b4f50); /* Darker teal on hover */
+    transform: scale(1.05);
+  }
+  
+  .script-container {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent white overlay for text */
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f1f1f1; /* White text */
+  }
+  
+  .script-container h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff; /* Ensure heading matches white text style */
+  }
+  
+  .script-container p {
+    margin: 0;
+    font-size: 1rem;
+    color: #e0e0e0; /* Slightly muted white for paragraph text */
+  }
+  
+  .error-message {
+    color: #ff6f61;
+    font-weight: bold;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .success-message {
+    color: #4caf50;
+    font-weight: bold;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  .new-project-button {
+    padding: 0.8rem 1.2rem;
+    background: linear-gradient(to bottom, #4caf50, #3e8e7e); /* Gradient for button */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1.5rem;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .new-project-button:hover {
+    background: linear-gradient(to bottom, #3e8e7e, #2b4f50); /* Darker teal on hover */
+    transform: scale(1.05);
+  }

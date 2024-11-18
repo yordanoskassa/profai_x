@@ -1,0 +1,114 @@
+.avatars-container {
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #335e66, #2b4f55); /* Teal gradient background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: #ffffff; /* White text for contrast */
+    font-family: Arial, sans-serif;
+  }
+  
+  .heading {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #ffffff important; /* Slightly off-white for better readability */
+
+
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff !important; /* Light gray for label text */
+  }
+  
+  .input-box {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background-color: #ffffff; /* Subtle contrast for input fields */
+    color: #2b3a42;
+  }
+  
+  .input-box:focus {
+    border-color: #3e8e7e;
+    outline: none;
+  }
+  .white {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .fetch-button {
+    padding: 0.8rem 1.2rem;
+    background: linear-gradient(to bottom, #4caf50, #3e8e7e); /* Gradient for button */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .fetch-button:hover {
+    background: linear-gradient(to bottom, #3e8e7e, #2b4f50); /* Darker teal on hover */
+    transform: scale(1.05);
+  }
+  
+  .results-container {
+    margin-top: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent white overlay for list */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    color: #f1f1f1; /* Ensure readability over the transparent background */
+  }
+  
+  .results-container ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .results-container li {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle divider lines */
+  }
+  
+  .results-container li:last-child {
+    border-bottom: none;
+  }
+  
+  .results-container li:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Slight highlight on hover */
+  }
+  
+  .error-message {
+    color: #ff6f61;
+    font-weight: bold;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .success-message {
+    color: #4caf50;
+    font-weight: bold;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
