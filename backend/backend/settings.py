@@ -21,8 +21,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #HEYGEN Stuff
-HEYGEN_API_KEY = 'left empty'
-CHATGPT_API_KEY = 'left empty'
+HEYGEN_API_KEY = ""
+CHATGPT_API_KEY = ""
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -42,6 +42,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+
+    
 }
 
 SIMPLE_JWT = {
@@ -73,7 +75,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-] 
+
+    
+]
+
+
 
 ROOT_URLCONF = 'backend.urls'
 

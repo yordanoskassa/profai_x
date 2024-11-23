@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note
+from .models import Key
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,8 +15,19 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class NoteSerializer(serializers.ModelSerializer):
+class APIKeySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Note
-        fields = ["id", "title", "content", "created_at", "author"]
-        extra_kwargs = {"author": {"read_only": True}}
+        model = Key
+        fields = ["key", "author"]
+        extra_kwargs = {
+            "author": {"read_only": True, "required": False},
+        }
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            validated_data['author'] = user
+        else:
+            validated_data['author'] = None  # Or remove this line
+        return super().create(validated_data)
+

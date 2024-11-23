@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, NoteSerializer
+from .serializers import UserSerializer, APIKeySerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.views.decorators.csrf import csrf_exempt
-from .models import Note
+from .models import Key
 import requests
 from openai import OpenAI
 import json
@@ -16,27 +16,36 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-class NoteListCreate(generics.ListCreateAPIView):
-    serializer_class = NoteSerializer
-    permission_classes = [IsAuthenticated]
+import hashlib
+
+class APIKeyCreate(generics.ListCreateAPIView):
+    serializer_class = APIKeySerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         user = self.request.user
-        return Note.objects.filter(author=user)
-
+        return Key.objects.filter(author=user)
+    
+# Secure storage in perform_create
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user)
-        else:
-            print(serializer.errors)
 
-class NoteDelete(generics.DestroyAPIView):
-    serializer_class = NoteSerializer
+        key = serializer.validated_data["key"]
+        
+        # Simple encryption using SHA256 hashing
+        #hashed_key = hashlib.sha256(key.encode()).hexdigest()
+
+        # Save the hashed key to the database
+        serializer.save(author=self.request.user, key=key)
+
+
+
+class APIKeyDelete(generics.DestroyAPIView):
+    serializer_class = APIKeySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        return Note.objects.filter(author=user)
+        return Key.objects.filter(author=user)
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -44,12 +53,24 @@ class CreateUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
+
 def get_avatars(request):
+    # Ensure the user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User is not authenticated.'}, status=401)
+
+    # Retrieve the API key from the database for the current user
+    try:
+        user_key = Key.objects.get(author=request.user)  # Adjust query based on your model structure
+        api_key = user_key.key
+    except Key.DoesNotExist:
+        return JsonResponse({'error': 'API key not found for the user.'}, status=404)
+
+    # HeyGen API request
     url = "https://api.heygen.com/v2/avatars"
-    api_key = settings.HEYGEN_API_KEY
     headers = {
         "accept": "application/json",
-        "x-api-key": api_key  # Replace with your actual HeyGen API key
+        "x-api-key": api_key,  # Use the retrieved key
     }
 
     try:
@@ -59,7 +80,7 @@ def get_avatars(request):
         return JsonResponse(data)  # Return the response from HeyGen to the frontend
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': str(e)}, status=500)
-    
+
 def get_avatar_name(request):
     name = ''
     return name

@@ -1,6 +1,5 @@
 import React from "react";
 import LoadingIndicator from "../LoadingIndicator/LoadingIndicator";
-import "./AvatarList.css";
 
 const AvatarList = ({ setJsonData, setError, setLoading, loading }) => {
   const fetchAvatars = async () => {

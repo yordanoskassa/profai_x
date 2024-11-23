@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 import TestimonialsSection from './components/TestimonialsSection/TestimonialsSection.jsx'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
 
+import GetStarted from './components/Dashboard/GetStarted.jsx';
 
 
 

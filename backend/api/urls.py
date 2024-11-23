@@ -4,12 +4,16 @@ from .views import get_avatars
 from .views import get_voices
 from .views import generate_script
 
+#from .views import APIKeyListCreateView, APIKeyDeleteView
+
 urlpatterns = [
-    path("notes/", views.NoteListCreate.as_view(), name="note-list"),
-    path("notes/delete/<int:pk>/", views.NoteDelete.as_view(), name="delete-note"),
     path('get_avatars/', get_avatars, name='get_avatars'),
     path('generate_script/', generate_script, name='generate_script'),
     path('get_voices/', get_voices, name='get_voices'),
+
+    path('save_api/', views.APIKeyCreate.as_view(), name='save_api'),
+
+    #path("save_api/", APIKeyListCreateView.as_view(), name="save_api"),
+    #path("delete_api/<int:pk>/", APIKeyDeleteView.as_view(), name="delete_api"),
 ]
 
-    #path('save_api/', views.SaveAPI
