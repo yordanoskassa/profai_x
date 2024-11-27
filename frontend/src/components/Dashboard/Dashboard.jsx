@@ -9,7 +9,10 @@ import Templates from './Templates';
 import Voices from './Voices';
 import Header from './Header';
 import GetStarted from './GetStarted';
+import Profile from './Profile';
 import './Dashboard_styles.css';
+import ProjectSubmission from './ProjectSubmission';
+import VideoSlides  from './VideoSlides';
 
 const Dashboard = () => {
   // Retrieve the token, here assumed to be from localStorage.
@@ -27,6 +30,9 @@ const Dashboard = () => {
           <Route path="avatars" element={<Avatars/>} />
           <Route path="templates" element={<Templates />} />
           <Route path="voices" element={<Voices />} />
+          <Route path="project-submission" element={<ProjectSubmission />} />
+          <Route path="/video-slides" element={<VideoSlides />} />
+          <Route path="/Account/Profile" component={Profile} />
         </Routes>
       </div>
     </div>

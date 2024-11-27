@@ -1,15 +1,23 @@
 // src/components/Header.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    navigate('Profile'); // Ensure this matches the defined route
+  };
+
   return (
-    <header className="header">
-            <a href="/dashboard" onClick={() => window.location.reload()}>
-            <img className="logo"  src="./images/logo.png" alt="Logo" width={60} />
-        </a>
-        <h2>ProfAI</h2>
+    <header>
       <nav>
-        <Link to="/dashboard">Account</Link>
+        <button onClick={() => navigate('/')}>
+          ProfAI
+        </button>
+        <button onClick={handleProfileClick}>
+          Account
+        </button>
       </nav>
     </header>
   );

@@ -1,46 +1,84 @@
+// src/components/Dashboard/GetStarted.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ACCESS_TOKEN } from "../../constants";
+import { isTokenExpired, refreshToken } from "../../util/auth";
+import setAuthToken from "../../util/setAuthToken";
 
 const GetStarted = () => {
   const [apiKey, setApiKey] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // Function to handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Show loading state while submitting
+  const fetchCSRFToken = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/get_csrf_token/', {
+        withCredentials: true,
+      });
+      return response.data.csrfToken;
+    } catch (error) {
+      console.error('Error fetching CSRF token:', error);
+      throw new Error('Failed to fetch CSRF token');
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+    setMessage("");
 
     try {
-      // Send the API key to the backend
+      const csrfToken = await fetchCSRFToken();
+      let accessToken = localStorage.getItem(ACCESS_TOKEN);
+
+      if (!accessToken || isTokenExpired(accessToken)) {
+        accessToken = await refreshToken();
+      }
+
+      if (!accessToken) {
+        setMessage("User not authenticated. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      // Set the authorization token for all requests
+      setAuthToken(`Bearer ${accessToken}`);
+
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/save_api/",
-        { key  : apiKey },
+        'http://127.0.0.1:8000/api/save_api/',
+        { key: apiKey },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+          withCredentials: true,
+        }
       );
 
-      // Handle success
-      setMessage("API Key submitted successfully!");
-      setApiKey(""); // Clear the input field
+      setMessage("API Key created successfully.");
+      console.log('Success:', response.data);
     } catch (error) {
-      // Handle errors
-      console.error("Error submitting API key:", error);
-      setMessage(
-        error.response?.data?.detail || "Failed to submit API Key. Try again."
-      );
+      setMessage(`Error: ${error.response?.data || error.message}`);
+      console.error('Error submitting API Key:', error.response?.data || error);
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 
   return (
-    <div className="get-started-container">
-      <h2>Get Started</h2>
-      <form onSubmit={handleSubmit} className="api-key-form">
-        <div className="form-group">
-          <label htmlFor="apiKey">Enter Your API Key:</label>
+    <div>
+      <h1>Get Started</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Enter Your API Key:</label>
           <input
             type="text"
-            id="apiKey"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="Enter your API Key"
@@ -48,18 +86,14 @@ const GetStarted = () => {
             className="input-field"
           />
         </div>
-        <button type="submit" className="submit-button" disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
       {message && (
-        <p
-          className={`message ${
-            message.includes("successfully") ? "success" : "error"
-          }`}
-        >
-          {message}
-        </p>
+        <div>
+          <p>{message}</p>
+        </div>
       )}
     </div>
   );

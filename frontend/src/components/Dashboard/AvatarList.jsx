@@ -1,23 +1,56 @@
 import React from "react";
-import LoadingIndicator from "../LoadingIndicator/LoadingIndicator";
+import axios from "axios";
+import { ACCESS_TOKEN } from "../../constants";
+import { isTokenExpired, refreshToken } from "../../util/auth";
+import setAuthToken from "../../util/setAuthToken";
 
 const AvatarList = ({ setJsonData, setError, setLoading, loading }) => {
+  const fetchCSRFToken = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/get_csrf_token/', {
+        withCredentials: true,
+      });
+      return response.data.csrfToken;
+    } catch (error) {
+      console.error('Error fetching CSRF token:', error);
+      throw new Error('Failed to fetch CSRF token');
+    }
+  };
+
   const fetchAvatars = async () => {
     console.log("Starting fetch operation...");
     setLoading(true);
+
     try {
-      const response = await fetch("http://localhost:8000/api/get_avatars/", {
-        method: "GET",
+      const csrfToken = await fetchCSRFToken();
+      let accessToken = localStorage.getItem(ACCESS_TOKEN);
+
+      if (!accessToken || isTokenExpired(accessToken)) {
+        accessToken = await refreshToken();
+      }
+
+      if (!accessToken) {
+        setError("User not authenticated. Please log in.");
+        return;
+      }
+
+      // Set the authorization token for all requests
+      setAuthToken(`Bearer ${accessToken}`);
+
+      const response = await axios.get("http://localhost:8000/api/get_avatars/", 
+        {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
         },
+        withCredentials: true,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Network response was not ok");
       }
 
-      const data = await response.json();
+      const data = response.data;
       console.log("Fetch successful:", data);
       setJsonData(JSON.stringify(data, null, 2));
     } catch (error) {
@@ -30,9 +63,9 @@ const AvatarList = ({ setJsonData, setError, setLoading, loading }) => {
   };
 
   return (
-    <div className="avatar-list-container">
-      <button className="fetch-button" onClick={fetchAvatars}>
-        Fetch Avatars
+    <div>
+      <button onClick={fetchAvatars} disabled={loading}>
+        {loading ? "Loading..." : "Fetch Avatars"}
       </button>
     </div>
   );

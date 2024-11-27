@@ -23,11 +23,8 @@ class APIKeySerializer(serializers.ModelSerializer):
             "author": {"read_only": True, "required": False},
         }
 
-    def create(self, validated_data):
-        user = self.context['request'].user
-        if user.is_authenticated:
-            validated_data['author'] = user
-        else:
-            validated_data['author'] = None  # Or remove this line
-        return super().create(validated_data)
+    def validate_key(self, value):
+        if not value or len(value.strip()) == 0:
+            raise serializers.ValidationError("Key cannot be empty.")
+        return value
 

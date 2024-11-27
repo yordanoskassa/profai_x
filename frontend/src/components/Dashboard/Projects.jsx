@@ -1,56 +1,68 @@
-import React, { useState, useEffect } from "react";
-import LoadingIndicator from "../LoadingIndicator/LoadingIndicator"; // Import LoadingIndicator component
-import "./Projects.css"; // Import the CSS file for styling
+import React, { useState } from "react";
+import axios from "axios";
+import LoadingIndicator from "../LoadingIndicator/LoadingIndicator";
+import "./Projects.css";
+import { ACCESS_TOKEN } from "../../constants";
+import { isTokenExpired, refreshToken } from "../../util/auth";
+import setAuthToken from "../../util/setAuthToken";
+import { useNavigate } from "react-router-dom";
 
 const Projects = () => {
-  const [avatarNames, setAvatarNames] = useState([]); // State for avatar names
-  const [selectedAvatar, setSelectedAvatar] = useState(""); // State for selected avatar
-  const [contentPrompt, setContentPrompt] = useState(""); // State for content prompt
+  const [contentPrompt, setContentPrompt] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false); // Loading state
-  const [responseMessage, setResponseMessage] = useState(null); // For backend response
-  const [generatedScript, setGeneratedScript] = useState(null); // State for the generated script
-  const [isNewProjectVisible, setIsNewProjectVisible] = useState(false); // Toggle for form visibility
+  const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState(null);
+  const [generatedScript, setGeneratedScript] = useState("");
+  const [isNewProjectVisible, setIsNewProjectVisible] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchAvatars = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("http://localhost:8000/api/get_avatars/");
-        if (!response.ok) {
-          throw new Error("Failed to fetch avatars");
-        }
-        const data = await response.json();
-        const names =
-          data.data?.avatars?.map((avatar) => avatar.avatar_name) || [];
-        setAvatarNames(names);
-        setError(null);
-      } catch (err) {
-        setError("Failed to load avatars");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAvatars();
-  }, []);
+  const fetchCSRFToken = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/get_csrf_token/', {
+        withCredentials: true,
+      });
+      return response.data.csrfToken;
+    } catch (error) {
+      console.error('Error fetching CSRF token:', error);
+      throw new Error('Failed to fetch CSRF token');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedAvatar || !contentPrompt) {
-      setError("Please select an avatar and enter a content prompt.");
+    if (!contentPrompt) {
+      setError("Please enter a content prompt.");
       return;
     }
+    if (loading) return;
 
     setLoading(true);
+    setError(null);
+
     try {
+      const csrfToken = await fetchCSRFToken();
+      let accessToken = localStorage.getItem(ACCESS_TOKEN);
+
+      if (!accessToken || isTokenExpired(accessToken)) {
+        accessToken = await refreshToken();
+      }
+
+      if (!accessToken) {
+        setError("User not authenticated. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      setAuthToken(`Bearer ${accessToken}`);
+
       const response = await fetch("http://localhost:8000/api/generate_script/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'X-CSRFToken': csrfToken,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          selectedAvatar,
           contentPrompt,
         }),
       });
@@ -70,93 +82,69 @@ const Projects = () => {
   };
 
   const handleBack = () => {
-    setSelectedAvatar("");
     setContentPrompt("");
     setResponseMessage(null);
-    setGeneratedScript(null);
+    setGeneratedScript("");
     setError(null);
     setIsNewProjectVisible(false);
   };
 
+  const handleApprove = () => {
+    navigate('/dashboard/project-submission', { state: { script: generatedScript } });
+  };
+
   return (
     <div className="projects-container">
-      <h2 className="heading">Projects</h2>
+      <h1>{isNewProjectVisible ? "Step 1: Creating A Script" : "Projects"}</h1>
 
-      {error && <p className="error-message">{error}</p>}
-      {responseMessage && <p className="success-message">{responseMessage}</p>}
+      {error && <div className="error-message">{error}</div>}
+      {responseMessage && <div className="response-message">{responseMessage}</div>}
 
-      <div className="video-container">
-        {!isNewProjectVisible && (
-          <>
-            <video width="300" controls className="video-player">
-              <source
-                src="https://files2.heygen.ai/aws_pacific/avatar_tmp/1033b8a8ca6b4afbbab64fe388e0730f/63c8a5090b81476ebabd6fd4bff0c7c5.mp4?Expires=1732379399&Signature=lSxHg6EO8jLluPa5wTlxiLA7XEnFOfmbQ0bVuMfM~F18Vk7-x87rnxB5pxQv5mY1qEp2-TrEWkT3cciR8N1P-WnCmYdhOmY5AmmP-agwXQ~ksLIF3qRgnKGE4AMBkbCT6GGonCzekNBZ1dZS6D584i3UCtC-2rh5sDltD75erBZtorz3d77-VEDM1wFgGSkKdmKToqLWxyncixX4IC3YHKsTObU3VsKBn5z58YQcuDQIz0Ghln-Ofb7nIlKBupvu4Tcv-y38NsXUKI~fJ-rT75bWSqsM-LQjCT2pJrP9-80g~Hy3YbIigHYC3xvs88jfXXqTxknzrcPy7vBmkyxo3g__&Key-Pair-Id=K38HBHX5LX3X2H"
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-            <button
-              onClick={() => setIsNewProjectVisible(true)}
-              className="new-project-button"
-            >
-              New Project
-            </button>
-          </>
-        )}
-      </div>
+      {!isNewProjectVisible && (
+        <button onClick={() => setIsNewProjectVisible(true)} className="new-project-button">
+          New Project
+        </button>
+      )}
 
       {isNewProjectVisible && (
-        <div className="form-container">
+        <div>
           {loading && <LoadingIndicator />}
 
           {!loading && (
-            <form onSubmit={handleSubmit} className="form">
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="avatarNames">Select Avatar:</label>
-                <select
-                  id="avatarNames"
-                  value={selectedAvatar}
-                  onChange={(e) => setSelectedAvatar(e.target.value)}
-                  required
-                  className="form-control"
-                >
-                  <option value="">Select an avatar</option>
-                  {avatarNames.map((name, index) => (
-                    <option key={index} value={name}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="contentPrompt">Content Prompt:</label>
-                <input
-                  type="text"
-                  id="contentPrompt"
+                <label>Content Prompt:</label>
+                <textarea
                   value={contentPrompt}
                   onChange={(e) => setContentPrompt(e.target.value)}
                   placeholder="Enter your content prompt here"
                   className="form-control"
+                  rows="5"
+                  required
                 />
               </div>
 
-              <button type="submit" className="submit-button">
-                Submit
-              </button>
+              <button type="submit" className="submit-button">Submit</button>
             </form>
           )}
 
           {generatedScript && (
-            <div className="script-container">
-              <h3>Generated Script:</h3>
-              <p>{generatedScript}</p>
+            <div>
+              <h2>Generated Script</h2>
+              <h4>Please adjust the script as needed for your avatar video. Slides will be generated based off of your script.</h4>
+              <textarea
+                value={generatedScript}
+                onChange={(e) => setGeneratedScript(e.target.value)}
+                className="form-control"
+                rows="10"
+              />
             </div>
           )}
 
-          <button onClick={handleBack} className="back-button">
-            Back
-          </button>
+          <button onClick={handleBack} className="back-button">Back</button>
+          {generatedScript && (
+            <button onClick={handleApprove} className="approve-button">Approve</button>
+          )}
         </div>
       )}
     </div>
