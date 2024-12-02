@@ -121,3 +121,17 @@
     background: linear-gradient(to bottom, #3e8e7e, #2b4f50); /* Darker teal on hover */
     transform: scale(1.05);
   }
+
+  .fetch-avatar-video-button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .fetch-avatar-video-button:hover {
+    background-color: #e0e0e0;
+  }
+  

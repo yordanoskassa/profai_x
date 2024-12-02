@@ -1,4 +1,4 @@
-// src/components/Header.jsx
+// Header.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,8 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    navigate('Profile'); // Ensure this matches the defined route
+    // Navigate to the profile page
+    navigate('/dashboard/profile');  // Full path to ensure correct routing
   };
 
   return (
@@ -15,9 +16,7 @@ const Header = () => {
         <button onClick={() => navigate('/')}>
           ProfAI
         </button>
-        <button onClick={handleProfileClick}>
-          Account
-        </button>
+        <button onClick={handleProfileClick}>Account</button>
       </nav>
     </header>
   );
