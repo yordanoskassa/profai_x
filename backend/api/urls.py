@@ -10,6 +10,7 @@ from .views import generate_video
 #from .views import register_webhook
 from .views import get_video_link
 from .views import get_user_profile
+from .views import generate_slide_structure
 
 urlpatterns = [
     path('get_avatars/', get_avatars, name='get_avatars'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('generate_video/', generate_video, name='generate_video'),
     path('get_video_link/', get_video_link, name='get_video_link'),
     path('get_user_profile/', get_user_profile, name='get_user_profile'),
+    path('generate_slide_structure/', generate_slide_structure, name='generate_slide_structure'),
 
 
     #path("save_api/", APIKeyListCreateView.as_view(), name="save_api"),

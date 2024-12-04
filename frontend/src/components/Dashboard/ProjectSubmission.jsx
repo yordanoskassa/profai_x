@@ -186,16 +186,15 @@ const ProjectSubmission = () => {
         throw new Error("Failed to generate video");
       }
 
-    const data = response.data;
-    const videoId = data.data.video_id;
-    console.log("Generated Video ID:", videoId);  // Log video ID to check if it's passed correctly
-   // Inside ProjectSubmission.js (or wherever you're navigating)
-    // Inside ProjectSubmission.js or wherever you're navigating
-    navigate('video-slides', { state: { videoId } });
+      const data = response.data;
+      const videoId = data.data.video_id;
+      console.log("Generated Video ID:", videoId);  // Log video ID to check if it's passed correctly
+      // Inside ProjectSubmission.js (or wherever you're navigating)
+      console.log("script being passed to video slides: ", script)
+      navigate('video-slides', { state: { videoId, script } });
 
-
-    setError(null);
-    setVideoGenerated(true);
+      setError(null);
+      setVideoGenerated(true);
     } catch (err) {
       setError("Failed to generate video");
     } finally {
@@ -270,9 +269,9 @@ const ProjectSubmission = () => {
               )}
             </div>
           )}
-          {error && <div className="error-message">{error}</div>}
         </div>
       )}
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };
