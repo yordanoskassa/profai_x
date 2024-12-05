@@ -11,6 +11,7 @@ from .views import generate_video
 from .views import get_video_link
 from .views import get_user_profile
 from .views import generate_slide_structure
+from .views import approve_slides
 
 urlpatterns = [
     path('get_avatars/', get_avatars, name='get_avatars'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('get_video_link/', get_video_link, name='get_video_link'),
     path('get_user_profile/', get_user_profile, name='get_user_profile'),
     path('generate_slide_structure/', generate_slide_structure, name='generate_slide_structure'),
+    path('approve_slides/', approve_slides, name = 'approve_slides')
 
 
     #path("save_api/", APIKeyListCreateView.as_view(), name="save_api"),

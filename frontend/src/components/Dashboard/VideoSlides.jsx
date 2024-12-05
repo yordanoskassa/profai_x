@@ -11,7 +11,7 @@ const VideoSlides = () => {
   const navigate = useNavigate();
 
   const [videoUrl, setVideoUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(null); // Track which button is loading
   const [error, setError] = useState(null);
   const [csrfToken, setCsrfToken] = useState(null);
   const [slideOutline, setSlideOutline] = useState(''); // Default to an empty string for slides
@@ -35,7 +35,7 @@ const VideoSlides = () => {
   }, []);
 
   const getVideoLink = async () => {
-    setLoading(true);
+    setLoadingButton('getVideoLink');
     setError(null);
 
     try {
@@ -88,12 +88,12 @@ const VideoSlides = () => {
       setError('Error processing the request: ' + err.message);
       console.error('Error processing the request:', err);
     } finally {
-      setLoading(false);
+      setLoadingButton(null);
     }
   };
 
   const generateSlideOutline = async () => {
-    setLoading(true);
+    setLoadingButton('generateSlideOutline');
     setError(null);
     setSlideOutline(''); // Reset previous slide outline
 
@@ -146,7 +146,7 @@ const VideoSlides = () => {
       setError('Error processing the request: ' + err.message);
       console.error('Error processing the request:', err);
     } finally {
-      setLoading(false);
+      setLoadingButton(null);
     }
   };
 
@@ -162,21 +162,97 @@ const VideoSlides = () => {
     setSlideOutline(JSON.stringify(updatedOutline));
   };
 
+  const handleApprove = async () => {
+    setLoadingButton('handleApprove');
+    setError(null);
+
+    try {
+      if (!csrfToken) {
+        setError("CSRF token is missing.");
+        return;
+      }
+
+      let accessToken = localStorage.getItem(ACCESS_TOKEN);
+
+      if (!accessToken || isTokenExpired(accessToken)) {
+        accessToken = await refreshToken();
+      }
+
+      if (!accessToken) {
+        setError("User not authenticated. Please log in.");
+        navigate("/login");
+        return;
+      }
+
+      setAuthToken(`Bearer ${accessToken}`);
+
+      // Prepare the data to be sent in the API call
+      const dataToSend = { slides: JSON.parse(slideOutline) };
+      console.log(dataToSend)
+      // Make the API call
+      try {
+        const response = await axios.post(
+          'http://localhost:8000/api/approve_slides/',
+          { slides: dataToSend },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+              'Authorization': `Bearer ${accessToken}`,
+            },
+            responseType: 'blob',
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("Slides approved successfully.");
+          // Create a Blob from the response data
+          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+          // Create a link element
+          const link = document.createElement('a');
+          // Set the download attribute with a filename
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'presentation.pptx';
+          // Append the link to the body
+          document.body.appendChild(link);
+          // Programmatically click the link to trigger the download
+          link.click();
+          // Remove the link from the document
+          document.body.removeChild(link);
+        } else {
+          setError('Failed to approve slides.');
+        }
+      } catch (err) {
+        if (err.response && err.response.data) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const errorText = reader.result;
+            console.error('Error approving slides:', errorText);
+            setError(`Failed to approve slides: ${errorText}`);
+          };
+          reader.readAsText(err.response.data);
+        } else {
+          setError('Failed to approve slides: ' + err.message);
+          console.error('Error approving slides:', err);
+        }
+      }
+    } catch (err) {
+      setError('Error processing the request: ' + err.message);
+      console.error('Error processing the request:', err);
+    } finally {
+      setLoadingButton(null);
+    }
+  };
+
   const parsedOutline = slideOutline ? JSON.parse(slideOutline) : null;
 
   return (
     <div className="video-slides-container">
-      <h2>Video ID</h2>
-      {videoId ? (
-        <p>Your Video ID is: {videoId}</p>
-      ) : (
-        <p>No video ID available.</p>
-      )}
-
-      <button onClick={getVideoLink} disabled={loading}>
-        {loading ? 'Loading...' : 'Get Video Link'}
+      <button onClick={getVideoLink} disabled={loadingButton === 'getVideoLink'}>
+        {loadingButton === 'getVideoLink' ? 'Loading...' : 'Get Video Link'}
       </button>
-
+  
       {videoUrl ? (
         <div>
           <h3>Video is ready!</h3>
@@ -190,11 +266,11 @@ const VideoSlides = () => {
       ) : (
         <p>Video is not available yet. Please try again later.</p>
       )}
-
-      <button onClick={generateSlideOutline} disabled={loading}>
-        {loading ? 'Generating...' : 'Generate Slide Outline'}
+  
+      <button onClick={generateSlideOutline} disabled={loadingButton === 'generateSlideOutline'}>
+        {loadingButton === 'generateSlideOutline' ? 'Generating...' : 'Generate Slide Outline'}
       </button>
-
+  
       {parsedOutline ? (
         <div>
           <h3>Generated Script Outline</h3>
@@ -217,8 +293,14 @@ const VideoSlides = () => {
       ) : (
         <p>No slide outline generated yet.</p>
       )}
+  
+      {slideOutline && (
+        <button onClick={handleApprove} disabled={loadingButton === 'handleApprove'}>
+          {loadingButton === 'handleApprove' ? 'Approving...' : 'Approve'}
+        </button>
+      )}
     </div>
   );
 };
 
-export default VideoSlides;
+  export default VideoSlides;
